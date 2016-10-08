@@ -1,0 +1,19 @@
+FROM {{ script.base_container }}
+
+WORKDIR /contester_prepare
+
+USER 0
+
+{% if script.packages is not none %}
+RUN dnf -y {{ ' '.join(script.packages) }}
+{% endif %}
+
+{% if script.files is not none %}
+COPY {{ ' '.join(script.files) }} /contester_prepare
+{% endif %}
+
+USER 1000
+
+{% if script.prepare_script is not none %}
+RUN /bin/bash -l -c '{{ ' && '.join(script.prepare_script) }}'
+{% endif %}

@@ -33,4 +33,7 @@ pksetup.setup(
         'Programming Language :: Python',
         'Topic :: Utilities',
     ],
+    package_data={
+        'contester.templates': ['*.j2'],
+    },
 )
