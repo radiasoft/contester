@@ -17,9 +17,12 @@ def _process_output(line):
     pkdc(line)
 
 class TestContainer(object):
-    def __init__(self, src_location, build_script):
-        self.src = src_location
+    def __init__(self, src_location, build_script, repo_name, repo_commit, repo_branch):
+        self.repo_branch = repo_branch
+        self.repo_commit = repo_commit
+        self.repo_name = repo_name
         self.script = build_script
+        self.src = src_location
 
     def prepare(self):
         self._pull_base()
@@ -52,4 +55,6 @@ class TestContainer(object):
 
             pkdc(open(dockerfile).read())
 
-            assert docker.build(build_dir_path, _out=_process_output).exit_code == 0
+            container_tag = 'contester/{0.repo_name}_{0.repo_branch}:{0.repo_commit}'.format(self)
+
+            docker.build('-t', container_tag, build_dir_path, _out=_process_output)

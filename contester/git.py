@@ -12,8 +12,8 @@ import urllib.parse
 
 class GitRepo(object):
     def __init__(self, repo_url):
-        self._branch = None
         self._commit = None
+        self.branch = None
         self.dirty = False
         self.git = None
         self.location = None
@@ -35,20 +35,14 @@ class GitRepo(object):
         else:
             self.location = os.path.realpath(os.path.join(os.getcwd(), self.repo_url.path))
 
-    def _dirty_prop(self, val):
-        if self.dirty:
-            return ''.join([val, '+'])
-
-    @property
-    def branch(self):
-        return self._dirty_prop(self._branch)
-
     @property
     def commit(self):
-        return self._dirty_prop(self._commit)
+        if self.dirty:
+            return '.'.join([self._commit, 'dirty'])
+        return self._commit
 
     def _read_repo_state(self):
-        self._branch = str(self.git('symbolic-ref', '--short', '-q', 'HEAD')).strip()
         self._commit = str(self.git('rev-parse', '--short', 'HEAD')).strip()
+        self.branch = str(self.git('symbolic-ref', '--short', '-q', 'HEAD')).strip()
         self.dirty = len(str(self.git('status', '--porcelain')).strip()) > 0
         self.repo_name = os.path.basename(self.location)
