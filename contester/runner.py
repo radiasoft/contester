@@ -11,23 +11,21 @@ install_aliases()
 from pykern import pkyaml
 from pykern.pkdebug import pkdc, pkdexc, pkdp
 import contester.docker
+import contester.git
 import contester.script
 import os
-import urllib.parse
 
 TEST_SCRIPT_NAME = '.radia_tests.yml'
 
 class Runner(object):
     def __init__(self, repo, env):
-        self.location = None
         self.script = None
         self.test_container = None
-        self.repo_url = urllib.parse.urlparse(repo)
-        self.repo_type = None
+        self.repo = contester.git.GitRepo(repo)
 
     @property
     def script_filename(self):
-        return os.path.join(self.location, TEST_SCRIPT_NAME)
+        return os.path.join(self.repo.location, TEST_SCRIPT_NAME)
 
     def run(self):
         self._prepare_repo()
@@ -35,21 +33,12 @@ class Runner(object):
         self._prepare_container()
 
     def _prepare_repo(self):
-        {
-            '': self._prepare_local_repo
-        }[self.repo_url.scheme]()
-
-    def _prepare_local_repo(self):
-        if os.path.isabs(self.repo_url.path):
-            self.location = self.repo_url.path
-        else:
-            self.location = os.path.realpath(os.path.join(os.getcwd(), self.repo_url.path))
-        pkdc('LOCAL repo: {}', self.location)
+        self.repo.ensure()
 
     def _read_run_script(self):
         self.script = contester.script.BuildScript(**pkyaml.load_file(self.script_filename))
 
     def _prepare_container(self):
         self.test_container = contester.docker.TestContainer(build_script=self.script,
-                                                             src_location=self.location)
+                                                             src_location=self.repo.location)
         self.test_container.prepare()
