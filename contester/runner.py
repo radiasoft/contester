@@ -41,8 +41,6 @@ class Runner(object):
     def _prepare_container(self):
         self.test_container = contester.docker.TestContainer(build_script=self.script,
                                                              src_location=self.repo.location,
-                                                             repo_name=self.repo.repo_name,
-                                                             repo_commit=self.repo.commit,
-                                                             repo_branch=self.repo.branch,
+                                                             repo=self.repo,
                                                             )
         self.test_container.prepare()

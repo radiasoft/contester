@@ -12,7 +12,7 @@ import urllib.parse
 
 class GitRepo(object):
     def __init__(self, repo_url):
-        self._commit = None
+        self.commit = None
         self.branch = None
         self.dirty = False
         self.git = None
@@ -35,14 +35,8 @@ class GitRepo(object):
         else:
             self.location = os.path.realpath(os.path.join(os.getcwd(), self.repo_url.path))
 
-    @property
-    def commit(self):
-        if self.dirty:
-            return '.'.join([self._commit, 'dirty'])
-        return self._commit
-
     def _read_repo_state(self):
-        self._commit = str(self.git('rev-parse', '--short', 'HEAD')).strip()
         self.branch = str(self.git('symbolic-ref', '--short', '-q', 'HEAD')).strip()
+        self.commit = str(self.git('rev-parse', '--short', 'HEAD')).strip()
         self.dirty = len(str(self.git('status', '--porcelain')).strip()) > 0
         self.repo_name = os.path.basename(self.location)

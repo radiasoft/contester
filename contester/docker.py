@@ -17,10 +17,8 @@ def _process_output(line):
     pkdc(line)
 
 class TestContainer(object):
-    def __init__(self, src_location, build_script, repo_name, repo_commit, repo_branch):
-        self.repo_branch = repo_branch
-        self.repo_commit = repo_commit
-        self.repo_name = repo_name
+    def __init__(self, src_location, build_script, repo):
+        self.repo = repo
         self.script = build_script
         self.src = src_location
 
@@ -49,12 +47,18 @@ class TestContainer(object):
                     filename=contester.templates.DOCKERFILE,
                     output=dockerfile,
                     values={
+                        'git_branch': self.repo.branch,
+                        'git_commit': self.repo.commit,
+                        'git_dirty': self.repo.dirty,
+                        'git_name': self.repo.repo_name,
                         'script': self.script,
                     },
             )
 
             pkdc(open(dockerfile).read())
 
-            container_tag = 'contester/{0.repo_name}_{0.repo_branch}:{0.repo_commit}'.format(self)
+            container_name = 'contester/{0.repo.repo_name}_{0.repo.branch}'.format(self)
 
-            docker.build('-t', container_tag, build_dir_path, _out=_process_output)
+            docker.build('-t', ':'.join([container_name, 'latest']),
+                         '-t', ':'.join([container_name, self.repo.commit]),
+                         build_dir_path, _out=_process_output)
