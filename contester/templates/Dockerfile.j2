@@ -5,6 +5,8 @@ FROM {{ script.base_container }}
 
 WORKDIR /contester_prepare
 
+SHELL ["/bin/bash", "-l", "-c"]
+
 USER 0
 
 {% if script.packages is not none %}
@@ -18,7 +20,7 @@ COPY {{ ' '.join(script.files) }} /contester_prepare
 USER 1000
 
 {% if script.prepare_script is not none %}
-RUN ["/bin/bash", "-l", "-c", "{{ ' && '.join(script.prepare_script) }}"]
+RUN {{ ' && '.join(script.prepare_script) }}
 {% endif %}
 
 LABEL org.radiasoft.contester.branch={{ git_branch }} \
