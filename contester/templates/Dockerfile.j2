@@ -18,7 +18,7 @@ COPY {{ ' '.join(script.files) }} /contester_prepare
 USER 1000
 
 {% if script.prepare_script is not none %}
-RUN /bin/bash -l -c '{{ ' && '.join(script.prepare_script) }}'
+RUN ["/bin/bash", "-l", "-c", "{{ ' && '.join(script.prepare_script) }}"]
 {% endif %}
 
 LABEL org.radiasoft.contester.branch={{ git_branch }} \
