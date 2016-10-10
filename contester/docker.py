@@ -25,9 +25,12 @@ class TestContainer(object):
         self._prepare_test_image()
 
     def _pull_base(self):
-        assert docker.pull(self.script.base_container, _out=pkdc).exit_code == 0
+        print('Pulling base image: {0}...'.format(self.script.base_container), end='')
+        docker.pull(self.script.base_container, _out=pkdc)
+        print('done')
 
     def _prepare_test_image(self):
+        print('Preparing test image...', end='')
         with tempfile.TemporaryDirectory() as build_dir_path:
             if self.script.files is not None:
                 for filename in self.script.files:
@@ -62,8 +65,12 @@ class TestContainer(object):
             docker.build('-t', ':'.join([container_name, 'latest']),
                          '-t', self.tag,
                          build_dir_path, _out=pkdc)
+        print('done.')
+        print('Test image built as {0}.'.format(self.tag))
 
     def run(self):
+        # TODO(@elventear) I would like to mount the repo as 'ro', but pykern fails, it seems to
+        # try to write in the same location as the test.
         docker.run(
             '-v', '{0.repo.location}:/{0.repo.repo_name}:rw'.format(self),
             '-w', '/{0.repo.repo_name}'.format(self),

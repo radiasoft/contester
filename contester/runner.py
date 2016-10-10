@@ -35,6 +35,7 @@ class Runner(object):
 
     def _prepare_repo(self):
         self.repo.ensure()
+        print('Running on Git repo located at {}'.format(self.repo.location))
 
     def _read_run_script(self):
         self.script = contester.script.BuildScript(**pkyaml.load_file(self.script_filename))
