@@ -31,6 +31,7 @@ class Runner(object):
         self._prepare_repo()
         self._read_run_script()
         self._prepare_container()
+        self._run_test()
 
     def _prepare_repo(self):
         self.repo.ensure()
@@ -44,3 +45,6 @@ class Runner(object):
                                                              repo=self.repo,
                                                             )
         self.test_container.prepare()
+
+    def _run_test(self):
+        self.test_container.run()
