@@ -24,7 +24,3 @@ if sys.version_info < (3,):
         tempdir = tempfile.mkdtemp(suffix=suffix, prefix=prefix, dir=dir)
         yield tempdir
         shutil.rmtree(tempdir)
-
-
-else:
-    TemporaryDirectory = tempfile.TemporaryDirectory
