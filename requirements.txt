@@ -1,4 +1,3 @@
 future>=0.15.2; python_version < '3.0'
 pykern>=20161007.91108
-pytest-mock>=1.2
 sh>=1.11

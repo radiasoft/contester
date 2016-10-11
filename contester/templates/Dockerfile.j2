@@ -14,7 +14,7 @@ RUN yum -y install {{ ' '.join(script.packages) }}
 {% endif %}
 
 {% if script.files is not none %}
-COPY {{ ' '.join(script.files) }} /contester_prepare
+COPY {{ ' '.join(script.files) }} /contester_prepare/
 {% endif %}
 
 USER 1000

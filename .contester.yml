@@ -3,6 +3,8 @@ packages:
   - docker-io
 files:
   - requirements.txt
+  - requirements-test.txt  
 prepare_script:
   - pip install -r requirements.txt
+  - pip install -r requirements-test.txt
 test: PYTHONPATH=$(pwd) py.test
