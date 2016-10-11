@@ -15,7 +15,7 @@ import contester.git
 import contester.script
 import os
 
-TEST_SCRIPT_NAME = '.radia_tests.yml'
+TEST_SCRIPT_NAME = '.contester.yml'
 
 class Runner(object):
     def __init__(self, repo, env):
