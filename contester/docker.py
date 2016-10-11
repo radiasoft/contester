@@ -11,6 +11,7 @@ from pykern.pkdebug import pkdc, pkdexc, pkdp
 from sh import docker
 import contester.templates
 import os
+import shutil
 import sys
 
 if sys.version_info < (3,):
