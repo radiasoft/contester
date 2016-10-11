@@ -5,13 +5,18 @@
 :license: http://www.apache.org/licenses/LICENSE-2.0.html
 """
 
+from __future__ import print_function
 from pykern import pkjinja
 from pykern.pkdebug import pkdc, pkdexc, pkdp
 from sh import docker
 import contester.templates
 import os
-import shutil
-import tempfile
+import sys
+
+if sys.version_info < (3,):
+    from contester.py2py3 import TemporaryDirectory, print
+else:
+    from tempfile import TemporaryDirectory
 
 class TestContainer(object):
     def __init__(self, src_location, build_script, repo):
@@ -31,7 +36,7 @@ class TestContainer(object):
 
     def _prepare_test_image(self):
         print('Preparing test image...', end='', flush=True)
-        with tempfile.TemporaryDirectory() as build_dir_path:
+        with TemporaryDirectory() as build_dir_path:
             if self.script.files is not None:
                 for filename in self.script.files:
                     assert not os.path.isabs(filename), 'Only relative paths allowed'
