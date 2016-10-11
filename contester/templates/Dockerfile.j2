@@ -10,7 +10,7 @@ SHELL ["/bin/bash", "-l", "-c"]
 USER 0
 
 {% if script.packages is not none %}
-RUN dnf -y {{ ' '.join(script.packages) }}
+RUN yum -y install {{ ' '.join(script.packages) }}
 {% endif %}
 
 {% if script.files is not none %}

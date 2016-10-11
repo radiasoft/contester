@@ -4,6 +4,8 @@
 :copyright: Copyright (c) 2016 RadiaSoft LLC.  All Rights Reserved.
 :license: http://www.apache.org/licenses/LICENSE-2.0.html
 """
+from future import standard_library
+standard_library.install_aliases()
 
 from pykern.pkdebug import pkdc, pkdexc, pkdp
 from sh import git

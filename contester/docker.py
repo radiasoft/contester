@@ -8,7 +8,7 @@
 from __future__ import print_function
 from pykern import pkjinja
 from pykern.pkdebug import pkdc, pkdexc, pkdp
-from sh import docker
+from sh import docker, ErrorReturnCode
 import contester.templates
 import os
 import shutil
@@ -77,11 +77,14 @@ class TestContainer(object):
     def run(self):
         # TODO(@elventear) I would like to mount the repo as 'ro', but pykern fails, it seems to
         # try to write in the same location as the test.
-        docker.run(
-            '-v', '{0.repo.location}:/{0.repo.repo_name}:rw'.format(self),
-            '-w', '/{0.repo.repo_name}'.format(self),
-            '-u', '1000',
-            '--rm', '-i', self.tag,
-            '/bin/bash', '-l', '-c', self.script.test,
-            _out=print,
-        )
+        try:
+            docker.run(
+                '-v', '{0.repo.location}:/{0.repo.repo_name}:rw'.format(self),
+                '-w', '/{0.repo.repo_name}'.format(self),
+                '-u', '1000',
+                '--rm', '-i', self.tag,
+                '/bin/bash', '-l', '-c', self.script.test,
+                _out=print,
+            )
+        except ErrorReturnCode:
+            pass

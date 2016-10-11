@@ -1,6 +1,8 @@
 container: radiasoft/python2:latest
+packages:
+  - docker-io
 files:
   - requirements.txt
 prepare_script:
   - pip install -r requirements.txt
-test: py.test
+test: PYTHONPATH=$(pwd) py.test
