@@ -8,7 +8,7 @@ from future import standard_library
 standard_library.install_aliases()
 
 from pykern.pkdebug import pkdc, pkdexc, pkdp
-from sh import git
+from sh import git, ErrorReturnCode_1
 import os
 import urllib.parse
 
@@ -38,7 +38,11 @@ class GitRepo(object):
             self.location = os.path.realpath(os.path.join(os.getcwd(), self.repo_url.path))
 
     def _read_repo_state(self):
-        self.branch = str(self.git('symbolic-ref', '--short', '-q', 'HEAD')).strip()
+        try:
+            self.branch = str(self.git('symbolic-ref', '--short', '-q', 'HEAD')).strip()
+        except ErrorReturnCode_1:
+            self.branch = 'detached'
+
         self.commit = str(self.git('rev-parse', '--short', 'HEAD')).strip()
         self.dirty = len(str(self.git('status', '--porcelain')).strip()) > 0
         self.repo_name = os.path.basename(self.location)
