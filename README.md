@@ -50,22 +50,22 @@ The `container` field defines the name of a docker container that will serve as 
 
 The `packages` field defines a list of packages to install in the container. Currently it only supports `yum.
 
-#### Copy files for Image preparation
+##### Copy files for Image preparation
 
 The `files` field specifies a list of files from the repo to be used within the setup of the test container. The files are copied to a specific work directory within the repo.
 
-#### Command execution for Image preparation
+##### Command execution for Image preparation
 
 The `prepare_script` field specified a list of bash commands to be executed remotely. These commands are executed as user with `UID` 1000. These commands are executed inside a `bash` interpreter.
 
-#### Image tagging
+##### Image tagging
 
 If all the previous steps are successful, a new docker container will be commited locally with the following names:
 
 - `contester/<repo_name>_<repo_branch>:<git_commit>`
 - `contester/<repo_name>_<repo_branch>:latest`
 
-#### Test execution 
+##### Test execution 
 
 The `test` field defines a single `bash` command to execute on the previously commited container.
 
